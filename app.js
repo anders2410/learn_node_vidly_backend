@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
@@ -5,8 +6,19 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const usersRouter = require("./routes/customers");
 const genresRouter = require("./routes/genres");
+
+mongoose
+  .connect(
+    "mongodb+srv://andersholt:1234@vidly.rj4zg.mongodb.net/data?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => console.log("Connected to MongoDB"))
+  .catch(() => console.error("Error connecting to MongoDB"));
 
 const app = express();
 
@@ -21,7 +33,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/customers", usersRouter);
 app.use("/api/genres", genresRouter);
 
 // catch 404 and forward to error handler

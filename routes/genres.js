@@ -1,75 +1,67 @@
-const Joi = require("joi");
+const { Genre, validate } = require("../models/genre");
 const express = require("express");
 const router = express.Router();
 
-const genres = [
-  { id: 1, name: "genre1" },
-  { id: 2, name: "genre2" },
-  { id: 3, name: "genre3" },
-];
-
 // HTTP-GET: Get all the genres
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const genres = await Genre.find().sort("name");
   res.send(genres);
 });
 
 // HTTP-GET: Get a specific genre with :id
-router.get("/:id", (req, res) => {
-  const genre = genres.find((c) => c.id === parseInt(req.params.id));
+router.get("/:id", async (req, res) => {
+  const genre = await Genre.findById(req.params.id);
   if (!genre)
     return res.status(404).send("The genre with the given ID was not found.");
   res.send(genre);
 });
 
 // HTTP-POST: Posts a genre to the server
-router.post("/", (req, res) => {
-  const { error } = validateGenre(req.body);
+router.post("/", async (req, res) => {
+  const { error } = validate(req.body);
   if (error) {
     return res.status(404).send("The genre with the given ID was not found.");
   }
 
-  const genre = {
-    id: genres.length + 1,
-    name: req.body.name,
-  };
-  genres.push(genre);
-  res.send(genre);
+  const genre = new Genre();
+  genre.name = req.body.name;
+
+  genre.save((err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Data inserted");
+    }
+  });
 });
 
 // HTTP-PUT:
-router.put("/:id", (req, res) => {
-  const genre = genres.find((c) => c.id === parseInt(req.params.id));
-  if (!genre)
-    return res.status(404).send("The genre with the given ID was not found.");
-
-  const { error } = validateGenre(req.body);
+router.put("/:id", async (req, res) => {
+  const { error } = validate(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
 
-  genre.name = req.body.name;
+  const genre = await Genre.findByIdAndUpdate(
+    req.params.id,
+    { name: req.body.name },
+    { new: true }
+  );
+
+  if (!genre)
+    return res.status(404).send("The genre with the given ID was not found.");
+
   res.send(genre);
 });
 
 // HTTP-DELETE:
-router.delete("/:id", (req, res) => {
-  const genre = genres.find((c) => c.id === parseInt(req.params.id));
+router.delete("/:id", async (req, res) => {
+  const genre = await Genre.findByIdAndRemove(req.params.id);
+
   if (!genre)
     return res.status(404).send("The genre with the given ID was not found.");
 
-  const index = genres.indexOf(genre);
-  genres.splice(index, 1);
-
   res.send(genre);
 });
-
-// Validating the Genre
-function validateGenre(genre) {
-  const schema = {
-    name: Joi.string().min(3).required(),
-  };
-
-  return Joi.validate(genre, schema);
-}
 
 module.exports = router;
