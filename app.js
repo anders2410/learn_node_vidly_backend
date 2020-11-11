@@ -8,6 +8,7 @@ const logger = require("morgan");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/customers");
 const genresRouter = require("./routes/genres");
+const rentalsRouter = require("./routes/rentals");
 
 mongoose
   .connect(
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/api/customers", usersRouter);
 app.use("/api/genres", genresRouter);
+app.use("/api/rentals", rentalsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
