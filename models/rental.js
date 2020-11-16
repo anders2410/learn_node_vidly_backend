@@ -11,7 +11,7 @@ const rentalSchema = new mongoose.Schema({
         maxLength: 255,
       },
       isGold: {
-        type: boolean,
+        type: Boolean,
         default: false,
       },
       phone: {
@@ -33,7 +33,7 @@ const rentalSchema = new mongoose.Schema({
         maxLength: 255,
       },
       dailyRentalRate: {
-        type: number,
+        type: Number,
         required: true,
         min: 0,
         max: 255,

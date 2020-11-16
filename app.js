@@ -9,9 +9,10 @@ const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/customers");
+const customersRouter = require("./routes/customers");
 const genresRouter = require("./routes/genres");
 const rentalsRouter = require("./routes/rentals");
+const usersRouter = require("./routes/users");
 
 mongoose
   .connect(
@@ -37,9 +38,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/api/customers", usersRouter);
+app.use("/api/customers", customersRouter);
 app.use("/api/genres", genresRouter);
 app.use("/api/rentals", rentalsRouter);
+app.use("/api/users", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
