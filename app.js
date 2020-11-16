@@ -5,6 +5,9 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/customers");
 const genresRouter = require("./routes/genres");

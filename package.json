@@ -12,6 +12,7 @@
     "fawn": "^2.1.5",
     "http-errors": "~1.6.3",
     "joi": "^17.3.0",
+    "joi-objectid": "^3.0.1",
     "mongoose": "^5.10.13",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.6",
