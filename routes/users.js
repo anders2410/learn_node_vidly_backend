@@ -3,13 +3,14 @@ const bcrypt = require("bcrypt");
 // Library with utilities for objects
 const _ = require("lodash");
 const { User, validate } = require("../models/user");
+const auth = require("../middleware/auth");
 const express = require("express");
 const router = express.Router();
 
 // HTTP-GET: Get all the users
-router.get("/", async (req, res) => {
-  const users = await User.find();
-  res.send(users);
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  res.send(user);
 });
 
 // HTTP-POST: Posts a user to the server
@@ -25,7 +26,10 @@ router.post("/", async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
 
-  res.send(_.pick(user, ["_id", "name", "email"]));
+  const token = user.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .send(_.pick(user, ["_id", "name", "email"]));
 });
 
 module.exports = router;

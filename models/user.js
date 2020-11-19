@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+// Used to generate JSON-wen-tokens
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -21,7 +23,12 @@ const userSchema = new mongoose.Schema({
     minLength: 8,
     maxLength: 1024,
   },
+  isAdmin: Boolean,
 });
+
+userSchema.methods.generateAuthToken = function () {
+  return jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, "mySecretKey");
+};
 
 const User = mongoose.model("users", userSchema);
 

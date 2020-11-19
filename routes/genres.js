@@ -1,5 +1,7 @@
 const { Genre, validate } = require("../models/genre");
 const express = require("express");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const router = express.Router();
 
 // HTTP-GET: Get all the genres
@@ -17,7 +19,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // HTTP-POST: Posts a genre to the server
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
     return res.status(404).send("The genre with the given ID was not found.");
@@ -55,7 +57,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // HTTP-DELETE:
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const genre = await Genre.findByIdAndRemove(req.params.id);
 
   if (!genre)

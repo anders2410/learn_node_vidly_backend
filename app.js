@@ -13,6 +13,7 @@ const customersRouter = require("./routes/customers");
 const genresRouter = require("./routes/genres");
 const rentalsRouter = require("./routes/rentals");
 const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth");
 
 mongoose
   .connect(
@@ -42,6 +43,7 @@ app.use("/api/customers", customersRouter);
 app.use("/api/genres", genresRouter);
 app.use("/api/rentals", rentalsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
