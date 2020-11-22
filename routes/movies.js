@@ -3,7 +3,7 @@ const { Genre } = require("../models/genre.js");
 const express = require("express");
 const router = express.Router();
 
-// HTTP-GET: Get all the genres
+// HTTP-GET: Get all the movies
 router.get("/", async (req, res) => {
   const movies = await Movie.find().sort("name");
   res.send(movies);
