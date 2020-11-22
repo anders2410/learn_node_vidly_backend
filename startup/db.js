@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const winston = require("winston");
 
-const dbUrl =
-  "mongodb+srv://andersholt:1234@vidly.rj4zg.mongodb.net/data?retryWrites=true&w=majority";
+const dbUrl = process.env["DATABASE_NAME"];
 
 module.exports = function () {
   mongoose
